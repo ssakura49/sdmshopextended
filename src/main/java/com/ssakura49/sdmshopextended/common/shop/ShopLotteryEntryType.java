@@ -1,10 +1,8 @@
 package com.ssakura49.sdmshopextended.common.shop;
 
-import com.ssakura49.sdmshopextended.SDMSE;
 import dev.ftb.mods.ftblibrary.config.ConfigGroup;
 import dev.ftb.mods.ftblibrary.icon.Icon;
 import dev.ftb.mods.ftblibrary.icon.ItemIcon;
-import dev.ftb.mods.ftbquests.quest.BaseQuestFile;
 import dev.ftb.mods.ftbquests.quest.QuestObjectType;
 import dev.ftb.mods.ftbquests.quest.ServerQuestFile;
 import dev.ftb.mods.ftbquests.quest.loot.RewardTable;
@@ -14,25 +12,21 @@ import dev.ftb.mods.ftbquests.quest.reward.Reward;
 import dev.ftb.mods.ftbquests.util.ConfigQuestObject;
 import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.ListTag;
-import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.util.random.WeightedRandom;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraftforge.common.util.INBTSerializable;
 import net.sixik.sdmshoprework.SDMShopR;
 import net.sixik.sdmshoprework.SDMShopRework;
 import net.sixik.sdmshoprework.api.IConstructor;
 import net.sixik.sdmshoprework.api.shop.AbstractShopEntry;
 import net.sixik.sdmshoprework.api.shop.AbstractShopEntryType;
-import net.sixik.sdmshoprework.common.utils.NBTUtils;
-import net.sixik.sdmshoprework.common.utils.item.ItemHandlerHelper;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Random;
 
 public class ShopLotteryEntryType extends AbstractShopEntryType {
     public static final String ID = "sdmshopextended:lottery";
@@ -77,9 +71,13 @@ public class ShopLotteryEntryType extends AbstractShopEntryType {
         if (table != null) {
             list.add(Component.translatable("sdmshopextended.shop.entry.type.lottery.reward_table")
                     .append(": ")
-                    .append(table.getTitleOrElse(Component.literal("null")).copy().withStyle(ChatFormatting.BLUE)));
+                    .append(getTitleOrDefault(table,Component.literal("null")).copy().withStyle(ChatFormatting.BLUE)));
         }
         return list;
+    }
+
+    private Component getTitleOrDefault(RewardTable table, Component def) {
+        return table.useTitle ? table.getTitle() : def;
     }
 
     @Override
@@ -98,14 +96,14 @@ public class ShopLotteryEntryType extends AbstractShopEntryType {
     @Override
     public Icon getIcon() {
         if (table != null) {
-            if (giveCrateInstead && table.getLootCrate() != null) {
-                return ItemIcon.getItemIcon(table.getLootCrate().createStack());
+            if (giveCrateInstead && table.lootCrate != null) {
+                return ItemIcon.getItemIcon(table.lootCrate.createStack());
             } else {
-                List<WeightedReward> rewards = table.getWeightedRewards();
+                List<WeightedReward> rewards = table.rewards;
                 if (!rewards.isEmpty()) {
-                    Reward r = rewards.get(playerRandomIndex(rewards)).getReward();
+                    Reward r = rewards.get(playerRandomIndex(rewards)).reward;
                     if (r instanceof ItemReward itemReward) {
-                        return ItemIcon.getItemIcon(itemReward.getItem());
+                        return ItemIcon.getItemIcon(itemReward.item);
                     }
                 }
                 return ItemIcon.getItemIcon(new ItemStack(Items.CHEST));
@@ -158,7 +156,7 @@ public class ShopLotteryEntryType extends AbstractShopEntryType {
             if (results.isEmpty()) return false;
 
             for (WeightedReward wr : results) {
-                wr.getReward().claim(player, true);
+                wr.reward.claim(player, true);
             }
             return true;
         } catch (Exception e) {
@@ -168,9 +166,9 @@ public class ShopLotteryEntryType extends AbstractShopEntryType {
     }
 
     private boolean giveCrates(ServerPlayer player, RewardTable table, int count) {
-        if (table.getLootCrate() == null) return false;
+        if (table.lootCrate == null) return false;
 
-        ItemStack stack = table.getLootCrate().createStack();
+        ItemStack stack = table.lootCrate.createStack();
         stack.setCount(count);
 
         if (!player.getInventory().add(stack)) {
