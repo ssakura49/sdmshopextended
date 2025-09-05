@@ -1,0 +1,11 @@
+{
+  "sdmshopextended.shop.entry.type.lottery": "Lottery",
+  "sdmshopextended.shop.entry.type.lottery.description": "Use this item to get a random reward from the selected reward table or a loot crate",
+  "sdmshopextended.shop.entry.type.lottery.reward_table": "Reward Table",
+  "sdmshopextended.shop.entry.type.lottery.config.reward_table": "Select Reward Table",
+  "sdmshopextended.shop.entry.type.lottery.config.give_crate": "Give loot crate instead of direct item",
+  "sdmshopextended.shop.entry.type.lottery.cannot_sell": "This item cannot be sold",
+  "sdmshopextended.shop.entry.type.lottery.error.no_table": "No reward table selected, purchase failed",
+  "sdmshopextended.shop.entry.type.lottery.success": "Purchase successful!",
+  "sdmshopextended.shop.entry.type.lottery.fail": "Purchase failed!"
+}

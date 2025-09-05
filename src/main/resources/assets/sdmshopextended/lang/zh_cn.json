@@ -1,0 +1,11 @@
+{
+  "sdmshopextended.shop.entry.type.lottery": "抽奖",
+  "sdmshopextended.shop.entry.type.lottery.description": "使用此商品可以获得奖励表中的随机物品或战利品箱子",
+  "sdmshopextended.shop.entry.type.lottery.reward_table": "奖励表",
+  "sdmshopextended.shop.entry.type.lottery.config.reward_table": "选择奖励表",
+  "sdmshopextended.shop.entry.type.lottery.config.give_crate": "使用战利品箱子而非直接给物品",
+  "sdmshopextended.shop.entry.type.lottery.cannot_sell": "此商品无法出售",
+  "sdmshopextended.shop.entry.type.lottery.error.no_table": "没有选择奖励表，无法购买",
+  "sdmshopextended.shop.entry.type.lottery.success": "购买成功！",
+  "sdmshopextended.shop.entry.type.lottery.fail": "购买失败！"
+}
